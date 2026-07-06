@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isZivaAdmin() {
+      return signedIn() && request.auth.token.email == 'admin@zivapetworld.com';
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId)
+        && (
+          request.resource.data.role == 'user'
+          || (request.resource.data.role == 'admin' && isZivaAdmin())
+        );
+
+      allow read: if isOwner(userId) || isZivaAdmin();
+
+      allow update: if isOwner(userId)
+        && (
+          !('role' in request.resource.data.diff(resource.data).changedKeys())
+          || (request.resource.data.role == 'admin' && isZivaAdmin())
+        );
+
+      match /diagnoses/{diagnosisId} {
+        allow read, create, update, delete: if isOwner(userId);
+      }
+    }
+
+    match /appointments/{appointmentId} {
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid;
+
+      allow read: if signedIn()
+        && (resource.data.userId == request.auth.uid || isZivaAdmin());
+
+      allow update: if isZivaAdmin();
+
+      allow delete: if false;
+    }
+  }
+}
