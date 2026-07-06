@@ -16,7 +16,6 @@ const symptomOptions = ['Vomiting', 'Diarrhea', 'Fever', 'Loss of appetite', 'Sk
 //     species: 'Dog',
 //     breed: 'Golden Retriever',
 //     age: '3 years',
-//     weight: '28 kg',
 //   },
 //   pets: [
 //     {
@@ -25,7 +24,6 @@ const symptomOptions = ['Vomiting', 'Diarrhea', 'Fever', 'Loss of appetite', 'Sk
 //       species: 'Dog',
 //       breed: 'Golden Retriever',
 //       age: '3 years',
-//       weight: '28 kg',
 //     },
 //   ],
 //   activePetId: 'pet_max',
@@ -101,7 +99,6 @@ function Auth({ go, onAuth }) {
     dogName: '',
     dogBreed: '',
     dogAge: '',
-    dogWeight: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -128,10 +125,9 @@ function Auth({ go, onAuth }) {
         name: form.dogName.trim(),
         breed: form.dogBreed.trim(),
         age: form.dogAge.trim(),
-        weight: form.dogWeight.trim(),
       };
 
-      if (signup && !adminSignup && (!pet.name || !pet.breed || !pet.age || !pet.weight)) {
+      if (signup && !adminSignup && (!pet.name || !pet.breed || !pet.age)) {
         setError('Please complete your dog details.');
         setLoading(false);
         return;
@@ -224,14 +220,7 @@ function Auth({ go, onAuth }) {
             <SectionLabel>Dog details</SectionLabel>
             <Field label="Dog name" value={form.dogName} onChangeText={(text) => update('dogName', text)} />
             <Field label="Breed" value={form.dogBreed} onChangeText={(text) => update('dogBreed', text)} />
-            <TView className="flex-row gap-2">
-              <TView className="flex-1">
-                <Field label="Age" value={form.dogAge} onChangeText={(text) => update('dogAge', text)} />
-              </TView>
-              <TView className="flex-1">
-                <Field label="Weight" value={form.dogWeight} onChangeText={(text) => update('dogWeight', text)} />
-              </TView>
-            </TView>
+            <Field label="Age" value={form.dogAge} onChangeText={(text) => update('dogAge', text)} />
           </>
         ) : null}
 
@@ -316,7 +305,7 @@ function Dashboard({ screen, go, user, history, onSelectPet, themeMode, onToggle
           </TView>
           <TView className="flex-1">
             <TText className="text-lg font-bold text-text">{pet?.name || 'No dog profile'}</TText>
-            <TText className="text-xs text-dim">{pet ? `${pet.breed} - ${pet.age} - ${pet.weight}` : 'Add a dog from Profile to start diagnosis'}</TText>
+            <TText className="text-xs text-dim">{pet ? `${pet.breed} - ${pet.age}` : 'Add a dog from Profile to start diagnosis'}</TText>
           </TView>
           {pet ? <TView className="flex-row items-center gap-1 bg-green-soft rounded-full px-2 py-1">
             <TView className="w-1.5 h-1.5 rounded-full bg-green" />
@@ -376,7 +365,7 @@ function Dashboard({ screen, go, user, history, onSelectPet, themeMode, onToggle
         <SectionLabel>Canine health tip</SectionLabel>
         <TView className="flex-row gap-3 bg-card border border-line rounded-2xl p-3">
           <Ionicons name="water" size={22} color={colors.blue} />
-          <TText className="flex-1 text-xs text-sub leading-5">Dogs need 50-60ml of water per kg of body weight daily to stay healthy.</TText>
+          <TText className="flex-1 text-xs text-sub leading-5">Keep fresh water available through the day, especially after walks, play, or warm weather.</TText>
         </TView>
 
         <TPressable onPress={() => go('vet')} className="flex-row items-center gap-3 bg-card border border-red-line rounded-2xl p-3">
@@ -934,14 +923,13 @@ function AppointmentCard({ appointment }) {
 
 function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdateProfile, onUpdatePet, onDeletePet }) {
   const pet = user.pet;
-  const [newPet, setNewPet] = useState({ name: '', breed: '', age: '', weight: '' });
+  const [newPet, setNewPet] = useState({ name: '', breed: '', age: '' });
   const [editing, setEditing] = useState(false);
   const [profileForm, setProfileForm] = useState({ name: user.name, phone: user.phone || '' });
   const [petForm, setPetForm] = useState({
     name: pet?.name || '',
     breed: pet?.breed || '',
     age: pet?.age || '',
-    weight: pet?.weight || '',
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -954,7 +942,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
   function startEditing() {
     setError('');
     setProfileForm({ name: user.name, phone: user.phone || '' });
-    setPetForm({ name: pet?.name || '', breed: pet?.breed || '', age: pet?.age || '', weight: pet?.weight || '' });
+    setPetForm({ name: pet?.name || '', breed: pet?.breed || '', age: pet?.age || '' });
     setEditing(true);
   }
 
@@ -969,7 +957,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
       setError('Full name is required.');
       return;
     }
-    if (pet && (!petForm.name.trim() || !petForm.breed.trim() || !petForm.age.trim() || !petForm.weight.trim())) {
+    if (pet && (!petForm.name.trim() || !petForm.breed.trim() || !petForm.age.trim())) {
       setError('Complete all active dog fields.');
       return;
     }
@@ -985,7 +973,6 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
           name: petForm.name.trim(),
           breed: petForm.breed.trim(),
           age: petForm.age.trim(),
-          weight: petForm.weight.trim(),
         });
       }
       setEditing(false);
@@ -998,7 +985,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
 
   async function addPet() {
     setError('');
-    if (!newPet.name.trim() || !newPet.breed.trim() || !newPet.age.trim() || !newPet.weight.trim()) {
+    if (!newPet.name.trim() || !newPet.breed.trim() || !newPet.age.trim()) {
       setError('Complete all dog fields before adding.');
       return;
     }
@@ -1009,9 +996,8 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
         name: newPet.name.trim(),
         breed: newPet.breed.trim(),
         age: newPet.age.trim(),
-        weight: newPet.weight.trim(),
       });
-      setNewPet({ name: '', breed: '', age: '', weight: '' });
+      setNewPet({ name: '', breed: '', age: '' });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -1091,7 +1077,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
                   </TView>
                   <TView className="flex-1">
                     <TText className="text-base font-bold text-text">{item.name}</TText>
-                    <TText className="text-xs text-dim">{item.breed} - {item.age} - {item.weight}</TText>
+                    <TText className="text-xs text-dim">{item.breed} - {item.age}</TText>
                   </TView>
                   <TView className="items-center gap-2">
                     {selected ? <TText className="text-2xs text-green font-bold">Active</TText> : null}
@@ -1125,14 +1111,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
               <>
                 <Field label="Dog name" value={petForm.name} onChangeText={(text) => setPetForm((current) => ({ ...current, name: text }))} />
                 <Field label="Breed" value={petForm.breed} onChangeText={(text) => setPetForm((current) => ({ ...current, breed: text }))} />
-                <TView className="flex-row gap-2">
-                  <TView className="flex-1">
-                    <Field label="Age" value={petForm.age} onChangeText={(text) => setPetForm((current) => ({ ...current, age: text }))} />
-                  </TView>
-                  <TView className="flex-1">
-                    <Field label="Weight" value={petForm.weight} onChangeText={(text) => setPetForm((current) => ({ ...current, weight: text }))} />
-                  </TView>
-                </TView>
+                <Field label="Age" value={petForm.age} onChangeText={(text) => setPetForm((current) => ({ ...current, age: text }))} />
               </>
             ) : pet ? (
               <>
@@ -1144,7 +1123,6 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
                 </TView>
                 <InfoRow label="Breed" value={pet.breed} />
                 <InfoRow label="Age" value={pet.age} />
-                <InfoRow label="Weight" value={pet.weight} />
               </>
             ) : (
               <TView className="p-3">
@@ -1166,14 +1144,7 @@ function Profile({ screen, go, user, onLogout, onAddPet, onSelectPet, onUpdatePr
             <TView className="bg-card border border-line rounded-2xl p-3 gap-3">
               <Field label="Dog name" value={newPet.name} onChangeText={(text) => updatePet('name', text)} />
               <Field label="Breed" value={newPet.breed} onChangeText={(text) => updatePet('breed', text)} />
-              <TView className="flex-row gap-2">
-                <TView className="flex-1">
-                  <Field label="Age" value={newPet.age} onChangeText={(text) => updatePet('age', text)} />
-                </TView>
-                <TView className="flex-1">
-                  <Field label="Weight" value={newPet.weight} onChangeText={(text) => updatePet('weight', text)} />
-                </TView>
-              </TView>
+              <Field label="Age" value={newPet.age} onChangeText={(text) => updatePet('age', text)} />
               {error ? <TText className="text-red text-xs">{error}</TText> : null}
               <TPressable onPress={addPet} className="bg-green rounded-xl py-3">
                 <TText className="text-black text-center text-base font-extrabold">{saving ? 'Saving...' : 'Add dog'}</TText>
