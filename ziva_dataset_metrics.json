@@ -1,0 +1,79 @@
+{
+  "total_examples": 4780,
+  "diagnosis_classes": 100,
+  "severity_classes": 3,
+  "severity_distribution": {
+    "Severe": {
+      "count": 1820,
+      "percent": 38.0753
+    },
+    "Mild": {
+      "count": 1640,
+      "percent": 34.3096
+    },
+    "Moderate": {
+      "count": 1320,
+      "percent": 27.6151
+    }
+  },
+  "top_10_diagnoses": {
+    "Canine Parvovirus": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Canine distemper": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Rabies": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Kennel cough": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Leptospirosis": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Sarcoptic Mange (Scabies)": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Flea infestation": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Tick infestation": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Heartworm disease": {
+      "count": 90,
+      "percent": 1.8828
+    },
+    "Anaplasmosis": {
+      "count": 90,
+      "percent": 1.8828
+    }
+  },
+  "majority_baseline_diagnosis": {
+    "label": "Canine Parvovirus",
+    "count": 90,
+    "accuracy": 0.01882845188284519,
+    "macro_precision": 0.0001882845188284519,
+    "macro_recall": 0.01,
+    "macro_f1": 0.00036960985626283366,
+    "weighted_f1": 0.000695918139407009
+  },
+  "majority_baseline_severity": {
+    "label": "Severe",
+    "count": 1820,
+    "accuracy": 0.3807531380753138,
+    "macro_precision": 0.12691771269177127,
+    "macro_recall": 0.3333333333333333,
+    "macro_f1": 0.18383838383838383,
+    "weighted_f1": 0.2099911246354761
+  }
+}
